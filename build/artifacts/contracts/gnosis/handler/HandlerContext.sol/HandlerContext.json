@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "HandlerContext",
+  "sourceName": "contracts/gnosis/handler/HandlerContext.sol",
+  "abi": [],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220e6a453831b2b1562e74edaf769c6fa2748b858af7be53fdade3c36eea462a54764736f6c634300080a0033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220e6a453831b2b1562e74edaf769c6fa2748b858af7be53fdade3c36eea462a54764736f6c634300080a0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

@@ -1,0 +1,29 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "TestHandler",
+  "sourceName": "contracts/gnosis/test/TestHandler.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "dudududu",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "manager",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b50608480601d6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c806354955e5914602d575b600080fd5b6040805160131936013560601c815233602082015281519081900390910190f3fea264697066735822122029f77e1f0361661f5bc6c0d8827ed80e2191f4126b3c34830ed187123e5e4ba664736f6c634300080a0033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c806354955e5914602d575b600080fd5b6040805160131936013560601c815233602082015281519081900390910190f3fea264697066735822122029f77e1f0361661f5bc6c0d8827ed80e2191f4126b3c34830ed187123e5e4ba664736f6c634300080a0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
