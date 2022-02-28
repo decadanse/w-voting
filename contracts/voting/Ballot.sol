@@ -1,34 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.9;
 
-
-import "../seed/Seed.sol"; //need this
-// import "../utils/interface/Safe.sol"; // import "../test/Imports.sol";
-// import "../utils/SignerV2.sol";
-
+import "../seed/Seed.sol"; 
 import "../gnosis/GnosisSafe.sol";
-
-// import "./SampleModule.sol";
 import "hardhat/console.sol";
 
-// interface GnosisSafeVV2 is Safe{
-//     /// @dev Allows a Module to execute a Safe transaction without any further confirmations.
-//     /// @param to Destination address of module transaction.
-//     /// @param value Ether value of module transaction.
-//     /// @param data Data payload of module transaction.
-//     /// @param operation Operation type of module transaction.
-//     function execTransactionFromModule(address to, uint256 value, bytes calldata data, Enum.Operation operation)
-//         external
-//         returns (bool success);
-
-//     function execTransaction(
-//         address to,
-//         uint256 value,
-//         bytes calldata data,
-//         Enum.Operation operation,
-//         uint256 safeTxGas
-//     ) external returns (bool success);
-// }
 
 /// @title Voting with delegation.
 contract Ballot {
@@ -81,7 +57,7 @@ contract Ballot {
         }
 
         voters[chairperson].weight = basic_weight; 
-
+        
         // For each of the provided proposal names,
         // create a new proposal object and add it
         // to the end of the array.
@@ -101,23 +77,11 @@ contract Ballot {
     function addOwnerToGnosis(address owner) public {
         // Owner address cannot be null, the sentinel or the Safe itself.
         require(owner != address(0));
-        // console.log("msg.sender  is %s", msg.sender);
-        // console.log("executer  is %s", executer);
-        // require(msg.sender == executer);
 
         //Only allow if caller has enough weight (51% and more)
-        // require(seed.seedAmountForFunder(owner)/100 >= seed.fundingCollected()/100*51, "not enough funds in pool"); 
         require(seed.calculateClaim(msg.sender)*100 >= seed.fundingCollected()/100*51, "not enough funds in pool"); 
-        // console.log("seed.seedAmountForFunder(owner)  is %s", seed.seedAmountForFunder(msg.sender));
         console.log("seed.calculateClaim(owner)  is %s", seed.calculateClaim(msg.sender));
         console.log("seed.fundingCollected() is %s", seed.fundingCollected());
-        // console.log("seed.feeForFunder(owner)  is %s", seed.feeForFunder(msg.sender));        
-        // console.log("addOwnerToGnosis owner is %s", owner);
-        // console.log("addOwnerToGnosis chairperson is %s", chairperson);
-        // console.log("addOwnerToGnosis seed is %s", address(seed));
-        // console.log("addOwnerToGnosis safe is %s", address(safe));        
-        // console.log("addOwnerToGnosis admin is %s", admin); //admin.address = chairperson.address
-        // console.log("chairperson is %s", chairperson);
 
         address[] memory array = safe.getOwners();
         console.log("getOwners is %s : %s \n", address(array[0]), address(array[1]));
@@ -128,7 +92,6 @@ contract Ballot {
         console.log("getOwners is %s : %s :%s \n", address(array[0]), address(array[1]), address(array[2]));  
     }
 
-//https://github.com/gnosis/safe-core-sdk/blob/main/packages/safe-core-sdk/src/managers/ownerManager.ts
     function removeOwnerFromGnosis(address forRemOwner, address owner) public {
         // Owner address cannot be null, the sentinel or the Safe itself.
         require(owner != address(0));
@@ -138,24 +101,7 @@ contract Ballot {
         address[] memory array = safe.getOwners(); //part if later edit for to pass only 1 arg to removeOwnerFromGnosis
         console.log("getOwners is %s : %s :%s \n", address(array[0]), address(array[1]), address(array[2])); 
 
-        // uint256 previous = 0;     
-        // uint256 len = array.length;
-        // for (uint256 i = 1; i < len; i++) {
-        //     if (array[i] == forRemOwner){
-        //         previous = i - 1;
-        //     }     
-        //         console.log(array[i]);       
-        // }
-        // address beforeForRemOwner = array[previous];
-        // console.log(previous);
-
-
-        // require(len > safe.getThreshold(), "ownerCount must be >= threshold");
-        // require(beforeForRemOwner != forRemOwner);
-
-        // console.log("safe.getThreshold() is %s \n", safe.getThreshold());        
         console.log("owner is %s \n", owner);
-        // console.log("beforeForRemOwner is %s \n", beforeForRemOwner);
         console.log("forRemOwner is %s \n", forRemOwner);
         // safe.removeOwner(beforeForRemOwner, forRemOwner, 1);
         safe.removeOwner(owner, forRemOwner, 1);  
@@ -183,15 +129,15 @@ contract Ballot {
         );
         require(!voters[voter].voted, "The voter already voted.");
         require(voters[voter].weight == 0);
-        voters[voter].weight = seed.calculateClaim(voter); //uncomment 
+        voters[voter].weight = seed.calculateClaim(voter);
     }
 
     /// Delegate your vote to the voter `to`.
     function delegate(address to) public {
         // assigns reference
         Voter storage sender = voters[msg.sender];
-        require(!sender.voted, "You already voted.");
 
+        require(!sender.voted, "You already voted.");
         require(to != msg.sender, "Self-delegation is disallowed.");
 
         // Forward the delegation as long as
@@ -208,6 +154,8 @@ contract Ballot {
             // We found a loop in the delegation, not allowed.
             require(to != msg.sender, "Found loop in delegation.");
         }
+
+        sender.weight = seed.calculateClaim(msg.sender); //upd balance info
 
         // Since `sender` is a reference, this
         // modifies `voters[msg.sender].voted`
@@ -230,12 +178,12 @@ contract Ballot {
     function vote(uint256 proposal) public {
         Voter storage sender = voters[msg.sender];
 
-        //sender.weight = seed.calculateClaim(msg.sender); //upd balance info
-
         require(sender.weight != 0, "Has no right to vote");
         require(!sender.voted, "Already voted.");
         sender.voted = true;
         sender.vote = proposal;
+
+        sender.weight = seed.calculateClaim(msg.sender); //upd balance info
 
         // If `proposal` is out of the range of the array,
         // this will throw automatically and revert all
